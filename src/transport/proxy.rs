@@ -31,7 +31,7 @@ pub enum ProxyConfig {
     Direct,
     /// Route all traffic through a SOCKS5 proxy.
     Socks {
-        /// Full proxy URL, e.g. `socks5h://127.0.0.1:9050`.
+        /// Full proxy URL, e.g. `socks5h://127.0.0.1:1080`.
         url: String,
         /// `true` for `socks5h://` (DNS resolved by the proxy), `false` for
         /// `socks5://` (DNS resolved locally).
@@ -98,9 +98,9 @@ mod tests {
     #[test]
     fn socks5h_enables_remote_dns() {
         assert_eq!(
-            ProxyConfig::from_raw("socks5h://127.0.0.1:9050"),
+            ProxyConfig::from_raw("socks5h://127.0.0.1:1080"),
             ProxyConfig::Socks {
-                url: "socks5h://127.0.0.1:9050".to_owned(),
+                url: "socks5h://127.0.0.1:1080".to_owned(),
                 remote_dns: true,
             }
         );
@@ -109,9 +109,9 @@ mod tests {
     #[test]
     fn socks5_uses_local_dns() {
         assert_eq!(
-            ProxyConfig::from_raw("socks5://127.0.0.1:9050"),
+            ProxyConfig::from_raw("socks5://127.0.0.1:1080"),
             ProxyConfig::Socks {
-                url: "socks5://127.0.0.1:9050".to_owned(),
+                url: "socks5://127.0.0.1:1080".to_owned(),
                 remote_dns: false,
             }
         );
@@ -120,9 +120,9 @@ mod tests {
     #[test]
     fn surrounding_whitespace_is_trimmed() {
         assert_eq!(
-            ProxyConfig::from_raw("  socks5h://127.0.0.1:9050  "),
+            ProxyConfig::from_raw("  socks5h://127.0.0.1:1080  "),
             ProxyConfig::Socks {
-                url: "socks5h://127.0.0.1:9050".to_owned(),
+                url: "socks5h://127.0.0.1:1080".to_owned(),
                 remote_dns: true,
             }
         );
@@ -131,6 +131,6 @@ mod tests {
     #[test]
     #[should_panic(expected = "must start with socks5:// or socks5h://")]
     fn unknown_scheme_panics() {
-        _ = ProxyConfig::from_raw("http://127.0.0.1:9050");
+        _ = ProxyConfig::from_raw("http://127.0.0.1:1080");
     }
 }

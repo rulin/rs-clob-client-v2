@@ -96,10 +96,10 @@ directly and behavior is identical to the upstream SDK.
 
 ```env
 # Resolve DNS on the proxy (recommended — no DNS leak, works with Tor)
-SOCKS5_PROXY=socks5h://127.0.0.1:9050
+SOCKS5_PROXY=socks5h://127.0.0.1:1080
 
 # Resolve DNS locally before connecting through the proxy
-SOCKS5_PROXY=socks5://127.0.0.1:9050
+SOCKS5_PROXY=socks5://127.0.0.1:1080
 
 # Empty or unset → direct connections (default)
 SOCKS5_PROXY=

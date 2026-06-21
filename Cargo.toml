@@ -86,12 +86,8 @@ serde_with = { version = "3.18.0", features = ["chrono_0_4", "json"] }
 sha1 = "0.10.6"
 sha2 = "0.10.9"
 strum_macros = "0.28.0"
-<<<<<<< HEAD
-tokio = { version = "1.50.0", features = ["time"] }
-=======
-tokio = { version = "1.50.0", features = ["rt-multi-thread", "macros"], optional = true }
+tokio = { version = "1.50.0", features = ["time","rt-multi-thread", "macros"], optional = true}
 tokio-socks = { version = "0.5.3", optional = true }
->>>>>>> 007ef0a (feat: route REST and WebSocket traffic through optional SOCKS5 proxy)
 tokio-tungstenite = { version = "0.29.0", features = ["rustls-tls-native-roots"], optional = true }
 tokio-util = { version = "0.7.18", optional = true }
 tracing = { version = "0.1", optional = true }
