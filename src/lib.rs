@@ -15,6 +15,7 @@ pub mod gamma;
 #[cfg(feature = "rtds")]
 pub mod rtds;
 pub(crate) mod serde_helpers;
+pub mod transport;
 pub mod types;
 #[cfg(any(feature = "ws", feature = "rtds"))]
 pub mod ws;

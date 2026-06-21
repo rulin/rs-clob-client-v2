@@ -14,7 +14,7 @@ use serde::de::DeserializeOwned;
 use tokio::net::TcpStream;
 use tokio::sync::{broadcast, mpsc, watch};
 use tokio::time::{interval, sleep, timeout};
-use tokio_tungstenite::{MaybeTlsStream, WebSocketStream, connect_async, tungstenite::Message};
+use tokio_tungstenite::{MaybeTlsStream, WebSocketStream, tungstenite::Message};
 
 use super::config::Config;
 use super::error::WsError;
@@ -171,8 +171,9 @@ where
 
             _ = state_tx.send(ConnectionState::Connecting);
 
-            // Attempt connection
-            match connect_async(&endpoint).await {
+            // Attempt connection through the transport layer, which transparently
+            // applies the SOCKS5/SOCKS5H proxy when `SOCKS5_PROXY` is configured.
+            match crate::transport::websocket::connect(&endpoint).await {
                 Ok((ws_stream, _)) => {
                     attempt = 0;
                     backoff.reset();
@@ -197,8 +198,7 @@ where
                         let _: &_ = &e;
                     }
                 }
-                Err(e) => {
-                    let error = Error::with_source(Kind::WebSocket, WsError::Connection(e));
+                Err(error) => {
                     #[cfg(feature = "tracing")]
                     tracing::warn!("Unable to connect: {error:?}");
                     #[cfg(not(feature = "tracing"))]
