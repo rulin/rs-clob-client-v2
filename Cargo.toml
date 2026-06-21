@@ -31,8 +31,14 @@ bridge = []
 ctf = ["alloy/contract", "alloy/providers"]
 rfq = []
 tracing = ["dep:tracing", "dep:serde_ignored", "dep:serde_path_to_error"]
-ws = ["dep:backoff", "dep:bitflags", "dep:tokio", "dep:tokio-tungstenite"]
-rtds = ["dep:backoff", "dep:tokio", "dep:tokio-tungstenite"]
+ws = [
+    "dep:backoff",
+    "dep:bitflags",
+    "dep:tokio",
+    "dep:tokio-socks",
+    "dep:tokio-tungstenite",
+]
+rtds = ["dep:backoff", "dep:tokio", "dep:tokio-socks", "dep:tokio-tungstenite"]
 heartbeats = ["dep:tokio", "dep:tokio-util"]
 
 [dependencies]
@@ -57,7 +63,7 @@ futures = "0.3.32"
 hmac = "0.12.1"
 phf = { version = "0.13.1", features = ["macros"] }
 rand = "0.10.0"
-reqwest = { version = "0.13.2", features = ["json", "query", "rustls"] }
+reqwest = { version = "0.13.2", features = ["json", "query", "rustls", "socks"] }
 rust_decimal = { version = "1.41.0", features = ["serde"] }
 rust_decimal_macros = "1.40.0"
 secrecy = { version = "0.10", features = ["serde"] }
@@ -72,6 +78,7 @@ sha1 = "0.10.6"
 sha2 = "0.10.9"
 strum_macros = "0.28.0"
 tokio = { version = "1.50.0", features = ["rt-multi-thread", "macros"], optional = true }
+tokio-socks = { version = "0.5.3", optional = true }
 tokio-tungstenite = { version = "0.29.0", features = ["rustls-tls-native-roots"], optional = true }
 tokio-util = { version = "0.7.18", optional = true }
 tracing = { version = "0.1", optional = true }

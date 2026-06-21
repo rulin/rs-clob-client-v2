@@ -14,6 +14,7 @@ This crate provides strongly typed request builders, authenticated endpoints, `a
 - [Overview](#overview)
 - [Getting Started](#getting-started)
 - [Feature Flags](#feature-flags)
+- [SOCKS5 Proxy Support](#socks5-proxy-support)
 - [Re-exported Types](#re-exported-types)
 - [Examples](#examples)
   - [CLOB Client](#clob-client)
@@ -84,6 +85,46 @@ Enable features in your `Cargo.toml`:
 ```toml
 [dependencies]
 polymarket_client_sdk_v2 = { version = "=0.6.0-canary.1", features = ["ws", "data"] }
+```
+
+## SOCKS5 Proxy Support
+
+This SDK can route **all** network traffic — REST (`reqwest`) and WebSocket
+(`tokio-tungstenite`) — through a SOCKS5 proxy, controlled by a single
+environment variable. When it is unset or empty, every connection is made
+directly and behavior is identical to the upstream SDK.
+
+```env
+# Resolve DNS on the proxy (recommended — no DNS leak, works with Tor)
+SOCKS5_PROXY=socks5h://127.0.0.1:9050
+
+# Resolve DNS locally before connecting through the proxy
+SOCKS5_PROXY=socks5://127.0.0.1:9050
+
+# Empty or unset → direct connections (default)
+SOCKS5_PROXY=
+```
+
+| `SOCKS5_PROXY`        | REST      | WebSocket | DNS resolved |
+|-----------------------|-----------|-----------|--------------|
+| *(unset / empty)*     | direct    | direct    | locally      |
+| `socks5h://host:port` | via proxy | via proxy | on the proxy |
+| `socks5://host:port`  | via proxy | via proxy | locally      |
+
+Credentials may be embedded in the URL (`socks5h://user:pass@host:port`) and
+are applied to both transports.
+
+### Reusing the proxy in your own code
+
+The transport layer is public, so external `reqwest` code can share the exact
+same configuration without configuring a proxy itself:
+
+```rust,ignore
+// Shared, process-wide client that already honors `SOCKS5_PROXY`:
+let client = polymarket_client_sdk_v2::transport::http::global_client();
+
+// Or build a fresh client with the same proxy applied:
+let client = polymarket_client_sdk_v2::transport::http::build_client()?;
 ```
 
 ## Re-exported Types
